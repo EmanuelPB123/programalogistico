@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cubo 3D en VR con A-Frame</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js"></script>
+    <style>
+        .image-inputs {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 100;
+        }
+        .image-input {
+            margin-bottom: 5px;
+        }
+        label {
+            color: white;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <a-scene>
+        <a-entity id="rig" position="0 1.6 2">
+            <a-camera look-controls wasd-controls></a-camera>
+            <a-entity laser-controls="hand: right"></a-entity>
+        </a-entity>
+
+        <a-sky color="#ECECEC"></a-sky>
+
+        <a-entity id="cube" rotation="0 45 0">
+            <a-plane id="face-front" position="0 0 0.5" width="1" height="1" color="#FFF"></a-plane>
+            <a-plane id="face-back" position="0 0 -0.5" width="1" height="1" color="#FFF" rotation="0 180 0"></a-plane>
+            <a-plane id="face-right" position="0.5 0 0" width="1" height="1" color="#FFF" rotation="0 -90 0"></a-plane>
+            <a-plane id="face-left" position="-0.5 0 0" width="1" height="1" color="#FFF" rotation="0 90 0"></a-plane>
+            <a-plane id="face-top" position="0 0.5 0" width="1" height="1" color="#FFF" rotation="90 0 0"></a-plane>
+            <a-plane id="face-bottom" position="0 -0.5 0" width="1" height="1" color="#FFF" rotation="-90 0 0"></a-plane>
+        </a-entity>
+    </a-scene>
+
+    <div class="image-inputs">
+        <div class="image-input">
+            <label for="front-image">Frente:</label>
+            <input type="file" id="front-image" accept="image/*">
+        </div>
+        <div class="image-input">
+            <label for="back-image">Atrás:</label>
+            <input type="file" id="back-image" accept="image/*">
+        </div>
+        <div class="image-input">
+            <label for="right-image">Derecha:</label>
+            <input type="file" id="right-image" accept="image/*">
+        </div>
+        <div class="image-input">
+            <label for="left-image">Izquierda:</label>
+            <input type="file" id="left-image" accept="image/*">
+        </div>
+        <div class="image-input">
+            <label for="top-image">Arriba:</label>
+            <input type="file" id="top-image" accept="image/*">
+        </div>
+        <div class="image-input">
+            <label for="bottom-image">Abajo:</label>
+            <input type="file" id="bottom-image" accept="image/*">
+        </div>
+    </div>
+
+    <script>
+        function loadImage(face, file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const cubeFace = document.querySelector(`#face-${face}`);
+                cubeFace.setAttribute('material', 'src', e.target.result);
+            }
+            reader.readAsDataURL(file);
+        }
+
+        const faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
+        faces.forEach(face => {
+            const input = document.getElementById(`${face}-image`);
+            input.addEventListener('change', function(e) {
+                if (this.files && this.files[0]) {
+                    loadImage(face, this.files[0]);
+                }
+            });
+        });
+
+        // Añadir interactividad al cubo
+        AFRAME.registerComponent('rotate-on-click', {
+            init: function () {
+                let el = this.el;
+                this.rotateY = 0;
+                
+                this.el.addEventListener('click', function () {
+                    this.rotateY += 90;
+                    el.setAttribute('animation', {
+                        property: 'rotation',
+                        to: `0 ${this.rotateY} 0`,
+                        dur: 1000,
+                        easing: 'easeOutQuad'
+                    });
+                });
+            }
+        });
+
+        document.querySelector('#cube').setAttribute('rotate-on-click', '');
+    </script>
+</body>
+</html>
