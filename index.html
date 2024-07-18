@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cubo 3D en VR con A-Frame</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.2.0/aframe.min.js"></script>
+     // Deshabilitar Ctrl+U, Ctrl+Shift+I y Ctrl+Shift+J
+        document.addEventListener('keydown', function(event) {
+            if ((event.ctrlKey && event.shiftKey && event.key === 'I') ||
+                (event.ctrlKey && event.shiftKey && event.key === 'J') ||
+                (event.ctrlKey && event.key === 'U')) {
+                event.preventDefault();
+
+            }
+        });
+                // Deshabilitar Ctrl+U, Ctrl+Shift+I y Ctrl+Shift+J
+                document.addEventListener('keydown', function(event) {
+            if ((event.ctrlKey && event.shiftKey && event.key === 'i') ||
+                (event.ctrlKey && event.shiftKey && event.key === 'j') ||
+                (event.ctrlKey && event.key === 'u')) {
+                event.preventDefault();
+
+            }
+        });
+
+        // Deshabilitar botón derecho del ratón
+        document.addEventListener('contextmenu', function(event) {
+            event.preventDefault();
+
+        });
     <style>
         .image-inputs {
             position: absolute;
